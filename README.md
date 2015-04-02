@@ -1,7 +1,7 @@
 # WTF moments I have experienced with JPA2
 WTF moments I have experienced wit JPA2, and how to possibly get around them.
 
-## WTF #1: Updating of the same entity, but from different sources
+## WTF #1: Update the same entity, but from different sources
 
 In JPA2, if an external source modifies a cached entity, the modifications is not automatically reflected in the 
 applications L2 cache.
