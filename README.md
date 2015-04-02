@@ -177,7 +177,7 @@ Counter c3 = withResultClass.get(0);
 assertThat(c3.count, lessThan(10)); // OK
 ```
 
-**Note**: *javax.persistence.cache* properties is ignored by Hibernate 4.3.8.Final (and 5.0.0.Beta1 as well), 
+**Note**: *javax.persistence.cache* properties are ignored by Hibernate 4.3.8.Final (and 5.0.0.Beta1 as well), 
 see: https://hibernate.atlassian.net/browse/HHH-9045. The Hibernate team has rejected the bug and they will not  
 fix the flaw. This is, in my opinion, rather ignorant. A large scale, distributed, JPA based application need to control 
 all aspects og L2 caching. In this context, Hibernate is useless as a persistence provider!
