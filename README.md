@@ -25,7 +25,7 @@ Given an entity:
       public Counter() {}
     }
 
-The application persist a new entity with count value = 10:
+The application persists a new entity with count value = 10:
  
     Counter c = new Counter(id:"101", count:10, maxCount:10);
     em.getTransaction().begin();
@@ -33,7 +33,7 @@ The application persist a new entity with count value = 10:
     em.flush();
     em.getTransaction().commit();
     
-Anoter application, e.g. the database console, connects to the database and set Counter.count = 9 for Counter.id='101':
+Anoter application, e.g. the database console, connects to the database and sets Counter.count = 9 for Counter.id='101':
  
     UPDATE COUNTER
     SET version=2, count=9
@@ -69,7 +69,7 @@ All three assertions gives the same result:
 ### WTF!?
 Acording to spec this behavior is correct (unfortunately); if an external source modifies an entity that is already 
 present in this applications L2 cache, the modification is not automagically reflected to the L2 cache. For large scale,
-distributed applications, this behavior can quickly lead to maintenance nightmare. If for example, the app attempts to modify 
+distributed applications, this behavior can quickly lead to maintenance nightmare. If the app tries to modify 
 the entity that is already changed by an external application, we'll get an OptimisticLockException!
  
     em.getTransaction().begin();
@@ -108,8 +108,8 @@ JPA will puke a *javax.persistence.OptimisticLockException* right in your face, 
 
 #### Set *"javax.persistence.cache.retrieveMode"* and *"javax.persistence.cache.storeMode"* properties
 JPA2 has two properties which can be used to control L2 cache, *"javax.persistence.cache.retrieveMode"* and 
-*"javax.persistence.cache.storeMode"*. The properties can be set on the entity manager, on the entity manager's find 
-method, or as a query hint on a given query. If set on the entity manager, the effect will last for the liftetime of
+*"javax.persistence.cache.storeMode"*. The properties can be set on the entity manager, on the entity manager's finder 
+methods, or as a query hint on a given query. If set on the entity manager, the effect will last for the liftetime of
 the entity manager - the two other settings are per request. 
 
 #### Set properties on entity manager
