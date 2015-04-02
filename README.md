@@ -9,21 +9,22 @@ applications L2 cache.
 ### Imagine the following scenario
 
 Given an entity:
+```java
+@Entity
+public class Counter {
+  @Id
+  @Column(length=36)
+  public String id;
 
-    @Entity
-    public class Counter {
-      @Id
-      @Column(length=36)
-      public String id;
-  
-      @Version
-      public Long version;
-  
-      public int count;
-      public int maxCount;
-  
-      public Counter() {}
-    }
+  @Version
+  public Long version;
+
+  public int count;
+  public int maxCount;
+
+  public Counter() {}
+}
+```
 
 The application persists a new entity with count value = 10:
  
@@ -40,7 +41,7 @@ Anoter application, e.g. the database console, connects to the database and sets
     WHERE id='101';
     COMMIT;
 
-The application, still on the same thread and using the same entitymanager factory, reads back the entity:
+The application, still on the same JVM/thread and using the same entitymanager factory, reads back the entity:
 
     // em.find
     Counter c1 = em.find(Counter.class, "101");
@@ -79,7 +80,7 @@ the entity that is already changed by an external application, we'll get an Opti
     em.flush();
     em.getTransaction().commit();
     
-JPA will puke a *javax.persistence.OptimisticLockException* right in your face, leaving you with a lot of WTF's and WTH's. 
+JPA will puke a `javax.persistence.OptimisticLockException` right in your face, leaving you with a lot of WTF's and WTH's. 
 
 ### How to get around WTF #1
 
@@ -106,7 +107,7 @@ JPA will puke a *javax.persistence.OptimisticLockException* right in your face, 
     em.refresh(c);
     assertThat(c.count, lessThan(10));
 
-#### Set *"javax.persistence.cache.retrieveMode"* and *"javax.persistence.cache.storeMode"* properties
+#### Set `javax.persistence.cache.retrieveMode` and `javax.persistence.cache.storeMode` properties
 JPA2 has two properties which can be used to control L2 cache, *"javax.persistence.cache.retrieveMode"* and 
 *"javax.persistence.cache.storeMode"*. The properties can be set on the entity manager, on the entity manager's finder 
 methods, or as a query hint on a given query. If set on the entity manager, the effect will last for the liftetime of
