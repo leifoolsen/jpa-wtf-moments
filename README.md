@@ -111,7 +111,7 @@ em.refresh(c);
 assertThat(c.count, lessThan(10));
 ```
 
-#### Set `javax.persistence.cache.retrieveMode` and `javax.persistence.cache.storeMode` properties
+#### Set *javax.persistence.cache.retrieveMode* and *javax.persistence.cache.storeMode* properties
 JPA2 has two properties which can be used to control L2 cache, *"javax.persistence.cache.retrieveMode"* and 
 *"javax.persistence.cache.storeMode"*. The properties can be set on the entity manager, on the entity manager's finder 
 methods, or as a query hint on a given query. If set on the entity manager, the effect will last for the liftetime of
