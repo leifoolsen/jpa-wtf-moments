@@ -7,7 +7,7 @@
     <version>0.1-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
-    <description>WTF moments with JPA</description>
+    <description>WTF moments I have experienced wit JPA2, and how to possibly get around them.</description>
 
     <prerequisites>
         <maven>3.0</maven>
