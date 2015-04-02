@@ -4,6 +4,7 @@ import com.github.leifoolsen.jpawtf.domain.Counter;
 import com.github.leifoolsen.jpawtf.entitymanager.EntityManagerFactoryHelper;
 import com.google.common.base.Strings;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +95,71 @@ public class ModifySameEntityFromDifferentConnectionsTest {
         logger.debug("End\n");
     }
 
+    @Test
+    @Ignore  // Run manually
+    public void runWithExternalAppEclipseLink() throws IOException, InterruptedException {
+        logger.debug("**** Modify Counter with External app, EclipseLink  ****");
+        logger.debug("**** id, version, count, maxCount                   ****");
+
+        Properties properties = new Properties();
+        properties.put("javax.persistence.jdbc.url", "jdbc:h2:file:./target/myh2;AUTO_SERVER=TRUE");
+        properties.put("eclipselink.ddl-generation", "drop-and-create-tables");
+
+        EntityManagerFactory emf = EntityManagerFactoryHelper.createEntityManagerFactoryFor(
+                EntityManagerFactoryHelper.PU_ECLIPSELINK, properties, Arrays.asList(Counter.class));
+
+        EntityManager em = emf.createEntityManager(cacheModes); // NOTE: cacheModes has no effect on Hibernate
+
+        persistCounter(em);
+
+
+        logCounter("2: Execute ExternalAppModifyingEntity within 15s", (Object[]) null);
+        logCounter("2: Run mvn exec:java from console", (Object[]) null);
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        expectCounterToBeLessThanTenAfterModificationFromAnoterConnection_WTF(em);
+
+        em.close();
+        emf.close();
+        logger.debug("End\n");
+    }
+
+    @Test
+    @Ignore  // Run manually
+    public void runWithExternalAppHibernate() {
+        logger.debug("**** Modify Counter with External app, Hibernate  ****");
+        logger.debug("**** id, version, count, maxCount                 ****");
+
+        Properties properties = new Properties();
+        properties.put("javax.persistence.jdbc.url", "jdbc:h2:file:./target/myh2;AUTO_SERVER=TRUE");
+        properties.put("hibernate.hbm2ddl.auto", "create-drop");
+
+        EntityManagerFactory emf = EntityManagerFactoryHelper.createEntityManagerFactoryFor(
+                EntityManagerFactoryHelper.PU_HIBERNATE, properties, Arrays.asList(Counter.class));
+
+        EntityManager em = emf.createEntityManager(cacheModes); // NOTE: cacheModes has no effect on Hibernate
+
+        persistCounter(em);
+
+        logCounter("2: Execute ExternalAppModifyingEntity within 15s", (Object[])null);
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        expectCounterToBeLessThanTenAfterModificationFromAnoterConnection_WTF(em);
+
+        em.close();
+        emf.close();
+        logger.debug("End\n");
+    }
+
+
     private void persistCounter(EntityManager em) {
         Counter counter = new Counter("101", 10, 10);
         em.getTransaction().begin();
@@ -116,7 +184,6 @@ public class ModifySameEntityFromDifferentConnectionsTest {
         //Counter mergedCounter = em.merge(modifiedCounter);
         //em.flush();
         //em.getTransaction().commit();
-
 
         String jpql = "select c from Counter c where c.id = '101'";
         TypedQuery<Counter> tq = em.createQuery(jpql, Counter.class);
