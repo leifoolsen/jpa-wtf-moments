@@ -82,7 +82,7 @@ Counter mergedCounter = em.merge(c);
 em.flush();
 em.getTransaction().commit();
 ```    
-JPA will puke a `javax.persistence.OptimisticLockException` right in your face, leaving you with a lot of WTF's and WTH's. 
+JPA will spit a `javax.persistence.OptimisticLockException` right in your face, leaving you with a lot of WTF's and WTH's. 
 
 ### How to get around WTF #1
 
